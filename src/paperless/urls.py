@@ -340,6 +340,11 @@ urlpatterns = [
                                 allauth_social_account_views.signup,
                                 name="socialaccount_signup",
                             ),
+                            path(
+                                "connections/",
+                                allauth_social_account_views.connections,
+                                name="socialaccount_connections",
+                            ),
                         ],
                     ),
                 ),
@@ -353,6 +358,7 @@ urlpatterns = [
             ],
         ),
     ),
+    path("_allauth/", include("allauth.headless.urls")),
     # Root of the Frontend
     re_path(
         r".*",
