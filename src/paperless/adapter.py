@@ -54,6 +54,8 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         # get_host already validates the given host, so no need to check it again
         allowed_hosts = {context.request.get_host()} | set(settings.ALLOWED_HOSTS)
 
+        print("allowed_hosts", allowed_hosts)
+
         if "*" in allowed_hosts:
             # dont allow wildcard to allow urls from any host
             allowed_hosts.remove("*")
@@ -137,3 +139,6 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             user.save()
         handle_social_account_updated(None, request, sociallogin)
         return user
+
+    def on_authentication_error(self, *args, **kwargs):
+        print("authentication_error", args, kwargs)

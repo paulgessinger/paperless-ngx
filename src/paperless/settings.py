@@ -168,7 +168,8 @@ def _parse_beat_schedule() -> dict:
             "task": "paperless_mail.tasks.process_mail_accounts",
             "options": {
                 # 1 minute before default schedule sends again
-                "expires": 9.0 * 60.0,
+                "expires": 9.0
+                * 60.0,
             },
         },
         {
@@ -179,7 +180,8 @@ def _parse_beat_schedule() -> dict:
             "task": "documents.tasks.train_classifier",
             "options": {
                 # 1 minute before default schedule sends again
-                "expires": 59.0 * 60.0,
+                "expires": 59.0
+                * 60.0,
             },
         },
         {
@@ -190,7 +192,9 @@ def _parse_beat_schedule() -> dict:
             "task": "documents.tasks.index_optimize",
             "options": {
                 # 1 hour before default schedule sends again
-                "expires": 23.0 * 60.0 * 60.0,
+                "expires": 23.0
+                * 60.0
+                * 60.0,
             },
         },
         {
@@ -201,7 +205,9 @@ def _parse_beat_schedule() -> dict:
             "task": "documents.tasks.sanity_check",
             "options": {
                 # 1 hour before default schedule sends again
-                "expires": ((7.0 * 24.0) - 1.0) * 60.0 * 60.0,
+                "expires": ((7.0 * 24.0) - 1.0)
+                * 60.0
+                * 60.0,
             },
         },
         {
@@ -212,7 +218,9 @@ def _parse_beat_schedule() -> dict:
             "task": "documents.tasks.empty_trash",
             "options": {
                 # 1 hour before default schedule sends again
-                "expires": 23.0 * 60.0 * 60.0,
+                "expires": 23.0
+                * 60.0
+                * 60.0,
             },
         },
         {
@@ -223,7 +231,8 @@ def _parse_beat_schedule() -> dict:
             "task": "documents.tasks.check_scheduled_workflows",
             "options": {
                 # 1 minute before default schedule sends again
-                "expires": 59.0 * 60.0,
+                "expires": 59.0
+                * 60.0,
             },
         },
     ]
@@ -436,7 +445,7 @@ _CELERY_REDIS_URL, _CHANNELS_REDIS_URL = _parse_redis_url(
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "documents", "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -449,6 +458,7 @@ TEMPLATES = [
         },
     },
 ]
+print(TEMPLATES)
 
 CHANNEL_LAYERS = {
     "default": {
@@ -894,9 +904,9 @@ CACHES = {
 }
 
 if DEBUG and os.getenv("PAPERLESS_CACHE_BACKEND") is None:
-    CACHES["default"]["BACKEND"] = (
-        "django.core.cache.backends.locmem.LocMemCache"  # pragma: no cover
-    )
+    CACHES["default"][
+        "BACKEND"
+    ] = "django.core.cache.backends.locmem.LocMemCache"  # pragma: no cover
 
 
 def default_threads_per_worker(task_workers) -> int:
