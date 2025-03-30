@@ -10,30 +10,31 @@
 import requests
 from rich import print
 import webbrowser
+from urllib.parse import urlparse, parse_qs
 
-url = "http://localhost:8000"
+PAPERLESS_URL = "http://localhost:8000"
+# OIDC provider key configured in allauth
+provider = "authentik"
 
-initial = requests.get(f"{url}/accounts/login")
+initial = requests.get(f"{PAPERLESS_URL}/accounts/login")
 initial.raise_for_status()
 
 cookies = initial.cookies
 
-config = requests.get(f"{url}/_allauth/app/v1/config")
+config = requests.get(f"{PAPERLESS_URL}/_allauth/app/v1/config")
 print(config.json())
-# print(config.headers)
 
-redirect_url = f"{url}/_allauth/browser/v1/auth/provider/redirect"
-
-# redirect_initial = requests.get(redirect_url)
-# csrftoken = redirect_initial.cookies["csrftoken"]
-# print(f"csrftoken: {csrftoken}")
+redirect_url = f"{PAPERLESS_URL}/_allauth/browser/v1/auth/provider/redirect"
 
 entry = requests.post(
     redirect_url,
     headers={"X-CSRFToken": cookies["csrftoken"]},
     data={
-        "provider": "authentik",
-        "callback_url": "http://localhost:8001/callback",
+        "provider": provider,
+        # My understanding is this is the redirect URL that allauth will
+        # redirect to after the OIDC login is completed
+        # "callback_url": "http://localhost:8001/callback",
+        "callback_url": PAPERLESS_URL,
         "process": "login",
         "csrfmiddlewaretoken": cookies["csrftoken"],
     },
@@ -41,7 +42,13 @@ entry = requests.post(
     allow_redirects=False,
 )
 print(entry)
-print(entry.headers.get("Location"))
+location = entry.headers["Location"]
+print(location)
 entry.raise_for_status()
 
-webbrowser.open(entry.headers.get("Location"))
+parsed = urlparse(location)
+print(parsed)
+query = parse_qs(parsed.query)
+print(query)
+
+# webbrowser.open(location)
