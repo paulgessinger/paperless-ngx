@@ -349,7 +349,7 @@ urlpatterns = [
             ],
         ),
     ),
-    path("_allauth/", include("allauth.headless.urls")),
+    path("api/oidc/", include("allauth.headless.urls")),
     # Root of the Frontend
     re_path(
         r".*",
