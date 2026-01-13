@@ -416,6 +416,10 @@ SPECTACULAR_SETTINGS = {
         "MatchingAlgorithm": "documents.models.MatchingModel.MATCHING_ALGORITHMS",
     },
     "SCHEMA_PATH_PREFIX_INSERT": FORCE_SCRIPT_NAME or "",
+    "POSTPROCESSING_HOOKS": [
+        "drf_spectacular.hooks.postprocess_schema_enums",
+        "paperless.schema_hooks.merge_allauth_schema_hook",
+    ],
 }
 
 WSGI_APPLICATION = "paperless.wsgi.application"
